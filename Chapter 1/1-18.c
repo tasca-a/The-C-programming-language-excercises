@@ -12,6 +12,8 @@ int main(){
     removestuff(line);
     
     printf("%s\n", line);
+
+    return 0;
 }
 
 void mygetline(char save[], int limit){
