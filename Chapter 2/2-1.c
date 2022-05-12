@@ -59,5 +59,5 @@ void from_computation(){
     printf("int =\tlower: %u\t\t\tupper: %u\t\tunsigned\n",   0,   uint_max);
     printf("int =\tlower: %d\t\tupper: %d\t\tsigned\n",     int_l,    int_u);
     printf("long =\tlower: %lu\t\t\tupper: %lu\tunsigned\n",  0,  ulong_max);
-    printf("long =\tlower: %ld\tupper: %ld\tunsigned\n",  long_l,   long_u);
+    printf("long =\tlower: %ld\tupper: %ld\tsigned\n",  long_l,   long_u);
 }
