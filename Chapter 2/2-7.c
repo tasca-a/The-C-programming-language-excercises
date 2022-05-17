@@ -12,6 +12,7 @@ int main(){
     return 0;
 }
 
+/* invert: returns x with the n bits that begin at position p inverted */
 unsigned invert(unsigned x, int p, int n){
     return (~(~0<<n)<<(p-n+1))^x;
 }
