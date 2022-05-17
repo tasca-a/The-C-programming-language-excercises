@@ -27,8 +27,8 @@ unsigned setbits(unsigned x, int p, int n, unsigned y){
 void printBinary(unsigned value, int length){
     for (unsigned count = 0b1 << (length-1); count > 0; count = count >> 1)
         if (value & count)
-            printf("1");
+            putchar('1'); //printf("1");
         else
-            printf("0");
+            putchar('0'); //printf("0");
     putchar('\n');
 }
