@@ -5,13 +5,13 @@
     all the bits after the rightmost 1 in x. */
 
 int bitcount(unsigned x);
-void printBinary(unsigned value);
+void printbinary(unsigned value);
 
 int main(){
 
     unsigned ptrn = 0b11000101;
 
-    printf("input = "); printBinary(ptrn);
+    printf("input = "); printbinary(ptrn);
     printf("bit counted: %d\n", bitcount(ptrn));
 
     return 0;
@@ -29,7 +29,7 @@ int bitcount(unsigned x){
     return b;
 }
 
-void printBinary(unsigned value){
+void printbinary(unsigned value){
     for (unsigned count = 0b1 << (sizeof(value)*8-1); count > 0; count = count >> 1)
         if (value & count)
             putchar('1'); //printf("1");
