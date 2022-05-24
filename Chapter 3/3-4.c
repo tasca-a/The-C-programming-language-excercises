@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <limits.h>
 
+#define SIZE 100
+
 void itoa(int n, char s[]);
 void reverse(char s[]); /* taken from ex. 1-19 */
 
@@ -19,7 +21,7 @@ int main(){
     int test3 = INT_MAX;
     int test4 = INT_MIN;
 
-    char mystring[100];
+    char mystring[SIZE];
 
     itoa(test1, mystring);
     printf("%s\n", mystring);
