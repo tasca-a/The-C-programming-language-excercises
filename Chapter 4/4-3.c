@@ -94,9 +94,13 @@ int getop(char s[])
 
     sign = (c == '-') ? -1 : 1;
 
-    if (!isdigit(c) && c != '.')
-        if (!((c == '-' || c == '+') && isdigit(n = getch())))
+    if (!isdigit(c) && c != '.'){
+        if ( !( (c == '-' || c == '+') && isdigit(n = getch()) )  ){
+            if (c != '\n')
+                ungetch(n);
             return c;   /* not a number */
+        }
+    }
     
     if (c == '-' || c == '+'){
         c = n;
@@ -117,6 +121,10 @@ int getop(char s[])
         ungetch(c);
     
     return NUMBER;
+
+    /*  doppio a capo? 
+        per qualche ragione se togli la riga 98 funziona giusto..
+    */
 }
 
 #define BUFSIZE 100
