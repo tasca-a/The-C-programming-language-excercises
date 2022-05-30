@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h> /* for atof() */
 #include <ctype.h>
+#include <math.h>
 
 #define MAXOP   100 /* max size of operand or operator */
 #define NUMBER  '0' /* signal that a number was found */
@@ -21,26 +22,6 @@ void ungetch(int);
 
 /* reverse Polish calculator */
 int main(){
-
-    /* test cases for the new functions */
-    push(2.0), push(4.0);
-    printtop();             // 4 expected
-    
-    duplicatetop();
-    push(6.0);
-    swaptopelements();      
-
-    printallstack();        // stack should now be: 2 4 6 4
-
-    clearstack();
-
-    push(4.0), push(2.0);
-    printallstack();        // stack should now be: 4 2
-
-    printtop();             // 4 expected
-
-
-    /*
     int type;
     double op2;
     char s[MAXOP];
@@ -71,15 +52,25 @@ int main(){
                 else
                     printf("error: zero division\n");
                 break;
+            case 's':
+                push(sin(pop()));
+                break;
+            case 'e':
+                push(exp(pop()));
+                break;
+            case 'p':
+                op2 = pop();
+                push(pow(pop(), op2));
+                break;
             case '\n':
+                //printf("bruh\n");
                 printf("\t%.8g\n", pop());
                 break;
             default:
-                printf("error: unknowkn command %s\n", s);
+                printf("error: unknowkn command: \"%s\"\n", s);
                 break;
         }
     }
-    */
 
     return 0;
 }
@@ -157,46 +148,44 @@ void printallstack(void)
     putchar('\n');
 }
 
+// TODO: negative numbers support.
 /* getop: get next operator or numeric operand */
 int getop(char s[])
 {
     int i, c, n;
     int sign;
 
-    while ((s[0] = c = getch()) == ' ' || c == '\t')
+    s[0] = '+';
+
+    while ((s[1] = c = getch()) == ' ' || c == '\t')    // remove trailing blanks and tabs
         ;
 
-    s[1] = '\0';
+/*
+    if (c != '\n'){
+        if (isdigit(n = getch()) && (c == '+' || c == '-'))
+            s[0] = '-';
 
-    sign = (c == '-') ? -1 : 1;
-
-    if (!isdigit(c) && c != '.'){
-        if ( !( (c == '-' || c == '+') && isdigit(n = getch()) )  ){
-            if (n == '\n')
-                ungetch(n);
-            return c;   /* not a number */
-        }
-    }
-    
-    if (c == '-' || c == '+'){
-        c = n;
+        ungetch(c);
         ungetch(n);
     }
-    i = 0;
+*/
 
-    if (isdigit(c)) /* collect integer part */
-        while (isdigit(s[++i] = c = getch()))
-            ;
-    
-    if (c == '.')   /* collect fraction part */
-        while (isdigit(s[++i] = c = getch()))
-            ;
+    ungetch(c);
 
-    s[i] = '\0';
-    if (c != EOF)
-        ungetch(c);
-    
-    return NUMBER;
+    for (i = 1; isdigit(s[i] = c = getch()) || s[i] == '.'; i++)
+        ;
+
+    s[i+1] = '\0';
+
+    if (i == 1){
+        s[0] = c, s[1] = '\0';
+        //printf("ritornato: \"%c\"\n", (c == '\n') ? 'n' : c);
+        return c;
+    }
+    else{
+        //printf("ritornato: NUMBER\n");
+        return NUMBER;
+    }
 }
 
 #define BUFSIZE 100

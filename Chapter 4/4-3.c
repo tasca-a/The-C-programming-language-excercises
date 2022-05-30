@@ -96,7 +96,7 @@ int getop(char s[])
 
     if (!isdigit(c) && c != '.'){
         if ( !( (c == '-' || c == '+') && isdigit(n = getch()) )  ){
-            if (c != '\n')
+            if (n == '\n')
                 ungetch(n);
             return c;   /* not a number */
         }
