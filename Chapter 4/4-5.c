@@ -153,12 +153,19 @@ void printallstack(void)
 int getop(char s[])
 {
     int i, c, n;
-    int sign;
 
     s[0] = '+';
 
     while ((s[1] = c = getch()) == ' ' || c == '\t')    // remove trailing blanks and tabs
         ;
+
+    if (c == '-'){
+        //n = getch();
+        if (isdigit(n = getch())){
+            s[0] = c;
+            c = n;
+        }
+    }
 
 /*
     if (c != '\n'){
