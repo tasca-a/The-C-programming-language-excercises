@@ -85,46 +85,35 @@ double pop(void)
 int getop(char s[])
 {
     int i, c, n;
-    int sign;
 
-    while ((s[0] = c = getch()) == ' ' || c == '\t')
+    s[0] = '+';
+
+    while ((s[1] = c = getch()) == ' ' || c == '\t')    // remove trailing blanks and tabs
         ;
 
-    s[1] = '\0';
-
-    sign = (c == '-') ? -1 : 1;
-
-    if (!isdigit(c) && c != '.'){
-        if ( !( (c == '-' || c == '+') && isdigit(n = getch()) )  ){
-            if (n == '\n')
-                ungetch(n);
-            return c;   /* not a number */
+    if (c == '-'){
+        if (isdigit(n = getch())){
+            s[0] = c;
+            c = n;
         }
+
+        if (n == '\n')
+            ungetch(n);
     }
-    
-    if (c == '-' || c == '+'){
-        c = n;
-        ungetch(n);
+
+    ungetch(c);
+
+    for (i = 1; isdigit(s[i] = c = getch()) || s[i] == '.'; i++)
+        ;
+
+    s[i+1] = '\0';
+
+    if (i == 1){
+        s[0] = c, s[1] = '\0';
+        return c;
     }
-    i = 0;
-
-    if (isdigit(c)) /* collect integer part */
-        while (isdigit(s[++i] = c = getch()))
-            ;
-    
-    if (c == '.')   /* collect fraction part */
-        while (isdigit(s[++i] = c = getch()))
-            ;
-
-    s[i] = '\0';
-    if (c != EOF)
-        ungetch(c);
-    
-    return NUMBER;
-
-    /*  doppio a capo? 
-        per qualche ragione se togli la riga 98 funziona giusto..
-    */
+    else
+        return NUMBER;
 }
 
 #define BUFSIZE 100

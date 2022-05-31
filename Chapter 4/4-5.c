@@ -160,22 +160,14 @@ int getop(char s[])
         ;
 
     if (c == '-'){
-        //n = getch();
         if (isdigit(n = getch())){
             s[0] = c;
             c = n;
         }
-    }
 
-/*
-    if (c != '\n'){
-        if (isdigit(n = getch()) && (c == '+' || c == '-'))
-            s[0] = '-';
-
-        ungetch(c);
-        ungetch(n);
+        if (n == '\n')
+            ungetch(n);
     }
-*/
 
     ungetch(c);
 
@@ -186,13 +178,10 @@ int getop(char s[])
 
     if (i == 1){
         s[0] = c, s[1] = '\0';
-        //printf("ritornato: \"%c\"\n", (c == '\n') ? 'n' : c);
         return c;
     }
-    else{
-        //printf("ritornato: NUMBER\n");
+    else
         return NUMBER;
-    }
 }
 
 #define BUFSIZE 100
