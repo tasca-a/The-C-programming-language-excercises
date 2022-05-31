@@ -160,7 +160,7 @@ int getop(char s[])
         ;
 
     if (c == '-'){
-        if (isdigit(n = getch())){
+        if (isdigit(n = getch()) || n == '.'){
             s[0] = c;
             c = n;
         }
