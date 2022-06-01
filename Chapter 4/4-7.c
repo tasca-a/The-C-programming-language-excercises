@@ -1,3 +1,9 @@
+/*
+    Should ungets know about buf and bufp, or should it just use ungetch?
+    No it should not know anything about buf and bufp: reusing already implemented functions
+    is a good design practice and ensures that everything keeps working as expected.
+*/
+
 #include <stdio.h>
 #include <stdlib.h> /* for atof() */
 #include <ctype.h>
@@ -175,11 +181,4 @@ void ungets(char s[])
     
     for (l -= 1; l >= 0; l--)   // push back all characters in reverse
         ungetch(s[l]);
-
-
-    // this pushes back the string in reverse!
-    /*
-    for (int i = 0; s[i] != '\0'; i++)
-        ungetch(s[i]);
-    */
 }
