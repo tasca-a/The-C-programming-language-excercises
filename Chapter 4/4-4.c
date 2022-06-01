@@ -4,6 +4,8 @@
 
 #define MAXOP   100 /* max size of operand or operator */
 #define NUMBER  '0' /* signal that a number was found */
+#define MAXVAL 100  /* maximum depth of val stack */
+#define BUFSIZE 100
 
 void push(double);
 double pop(void);
@@ -13,11 +15,16 @@ void swaptopelements(void);     // 3th function for the exercise
 void clearstack(void);          // 4th function for the exercise
 void printallstack(void);
 
-
 int getop(char []);
 
 int getch(void);
 void ungetch(int);
+
+int sp = 0;         /* next free stack position */
+double val[MAXVAL]; /* value stack */
+
+char buf[BUFSIZE];  /* buffer for ungetch */
+int bufp = 0;
 
 /* reverse Polish calculator */
 int main(){
@@ -39,55 +46,8 @@ int main(){
 
     printtop();             // 4 expected
 
-
-    /*
-    int type;
-    double op2;
-    char s[MAXOP];
-
-    while ((type = getop(s)) != EOF){
-        switch (type){
-            case NUMBER:
-                push(atof(s));
-                break;
-            case '+':
-                push(pop() + pop());
-                break;
-            case '*':
-                push(pop() * pop());
-                break;
-            case '-':
-                op2 = pop();
-                push(pop() - op2);
-                break;
-            case '%':
-                op2 = pop();
-                push((int) pop() % (int) op2);
-                break;
-            case '/':
-                op2 = pop();
-                if (op2 != 0.0)
-                    push(pop() / op2);
-                else
-                    printf("error: zero division\n");
-                break;
-            case '\n':
-                printf("\t%.8g\n", pop());
-                break;
-            default:
-                printf("error: unknowkn command %s\n", s);
-                break;
-        }
-    }
-    */
-
     return 0;
 }
-
-#define MAXVAL 100  /* maximum depth of val stack */
-
-int sp = 0;         /* next free stack position */
-double val[MAXVAL]; /* value stack */
 
 /* push: push f onto value stack */
 void push(double f)
@@ -191,11 +151,6 @@ int getop(char s[])
     else
         return NUMBER;
 }
-
-#define BUFSIZE 100
-
-char buf[BUFSIZE];  /* buffer for ungetch */
-int bufp = 0;
 
 int getch(void) /* get a (possibly pushed back) character */
 {
