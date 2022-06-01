@@ -7,19 +7,21 @@
 #define NUMBER  '0' /* signal that a number was found */
 #define MAXVAL 100  /* maximum depth of val stack */
 #define BUFSIZE 100
+#define MAXVAR 26   /* maximum variables number */
 
 void push(double);
 double pop(void);
-void printtop(void);       
-void duplicatetop(void);   
+void printtop(void);
+void duplicatetop(void);
 void swaptopelements(void);
-void clearstack(void);     
+void clearstack(void);
 void printallstack(void);
 
 int getop(char []);
 
 int getch(void);
 void ungetch(int);
+void ungets(char []);
 
 int sp = 0;         /* next free stack position */
 double val[MAXVAL]; /* value stack */
@@ -27,56 +29,20 @@ double val[MAXVAL]; /* value stack */
 char buf[BUFSIZE];  /* buffer for ungetch */
 int bufp = 0;
 
+double var[MAXVAR]; /* array where variables are stored */
+double recent = 0;      /* most recent printed value */
+char recentvar = 'A';   /* most recent variable used */
+
 /* reverse Polish calculator */
 int main(){
-    int type;
-    double op2;
-    char s[MAXOP];
+    
+    /* ungets tests */
+    char string[] = "this is a test string";
+    ungets(string);
 
-    while ((type = getop(s)) != EOF){
-        switch (type){
-            case NUMBER:
-                push(atof(s));
-                break;
-            case '+':
-                push(pop() + pop());
-                break;
-            case '*':
-                push(pop() * pop());
-                break;
-            case '-':
-                op2 = pop();
-                push(pop() - op2);
-                break;
-            case '%':
-                op2 = pop();
-                push((int) pop() % (int) op2);
-                break;
-            case '/':
-                op2 = pop();
-                if (op2 != 0.0)
-                    push(pop() / op2);
-                else
-                    printf("error: zero division\n");
-                break;
-            case 's':
-                push(sin(pop()));
-                break;
-            case 'e':
-                push(exp(pop()));
-                break;
-            case 'p':
-                op2 = pop();
-                push(pow(pop(), op2));
-                break;
-            case '\n':
-                printf("\t%.8g\n", pop());
-                break;
-            default:
-                printf("error: unknowkn command: \"%s\"\n", s);
-                break;
-        }
-    }
+    int c;
+    while ((c = getch()) != EOF)
+        printf("%c\n", (char) c);
 
     return 0;
 }
@@ -184,15 +150,36 @@ int getop(char s[])
         return NUMBER;
 }
 
-int getch(void) /* get a (possibly pushed back) character */
+/* getch: get a (possibly pushed back) character */
+int getch(void)
 {
     return (bufp > 0) ? buf[--bufp] : getchar();
 }
 
-void ungetch(int c) /* push a character back on input */
+/* ungetch: push a character back on input */
+void ungetch(int c)
 {
     if (bufp >= BUFSIZE)
         printf("ungetch: too many characters\n");
     else
         buf[bufp++] = c;
+}
+
+/* ungets: push back an entire string onto the input */
+void ungets(char s[])
+{
+    int l;
+
+    for (l = 0; s[l] != '\0'; l++)  // get the string length
+        ;
+    
+    for (l -= 1; l >= 0; l--)   // push back all characters in reverse
+        ungetch(s[l]);
+
+
+    // this pushes back the string in reverse!
+    /*
+    for (int i = 0; s[i] != '\0'; i++)
+        ungetch(s[i]);
+    */
 }

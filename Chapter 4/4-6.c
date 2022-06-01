@@ -11,10 +11,10 @@
 
 void push(double);
 double pop(void);
-void printtop(void);            // 1st function for the exercise
-void duplicatetop(void);        // 2nd function for the exercise
-void swaptopelements(void);     // 3th function for the exercise
-void clearstack(void);          // 4th function for the exercise
+void printtop(void);            
+void duplicatetop(void);        
+void swaptopelements(void);     
+void clearstack(void);          
 void printallstack(void);
 
 int getop(char []);
