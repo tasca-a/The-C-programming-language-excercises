@@ -7,6 +7,7 @@
 #define NUMBER  '0' /* signal that a number was found */
 #define MAXVAL 100  /* maximum depth of val stack */
 #define BUFSIZE 100
+#define MAXVAR 26   /* maximum variables number */
 
 void push(double);
 double pop(void);
@@ -27,11 +28,18 @@ double val[MAXVAL]; /* value stack */
 char buf[BUFSIZE];  /* buffer for ungetch */
 int bufp = 0;
 
+double var[MAXVAR]; /* array where variables are stored */
+double recent = 0;      /* most recent printed value */
+char recentvar = 'A';   /* most recent variable used */
+
 /* reverse Polish calculator */
 int main(){
     int type;
     double op2;
     char s[MAXOP];
+
+    for (int i = 0; i < MAXVAR; i++)    // clear the var array
+        var[i] = 0;
 
     while ((type = getop(s)) != EOF){
         switch (type){
@@ -69,11 +77,24 @@ int main(){
                 op2 = pop();
                 push(pow(pop(), op2));
                 break;
+            case 'r':
+                printf("\t%.8g\n", recent);
+                break;
+            case '=':
+                pop(); 
+                var[recentvar-'A'] = pop();
+                break;
             case '\n':
-                printf("\t%.8g\n", pop());
+                recent = pop();
+                printf("\t%.8g\n", recent);
                 break;
             default:
-                printf("error: unknowkn command: \"%s\"\n", s);
+                if (s[0] >= 'A' && s[0] <= 'Z'){ // it's a variable!
+                    push(var[s[0]-'A']);
+                    recentvar = s[0];
+                }
+                else
+                    printf("error: unknowkn command: \"%s\"\n", s);
                 break;
         }
     }
