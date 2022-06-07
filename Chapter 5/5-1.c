@@ -8,8 +8,6 @@ int getint(int *pn);
 
 int main()
 {
-    printf("quew\n");
-
     int val, array[BUFSIZE];
     int n = 0;
 
