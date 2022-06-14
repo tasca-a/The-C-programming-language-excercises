@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include "utils.h"
 
 #define SIZE 100
 
-int mgetline(char *, int);
-int atoi(char *);
-char *itoa(int, char *);
+int mgetline(char *s, int lim);
+int atoi(char *s);
+char *itoa(int n, char *s);
 void reverse(char *s);
 int strindex(char *s, char *t);
+int getop(char *s);
 
 int main()
 {
     char str1[SIZE];
     int length;
+    int op;
 
     // getline test
     length = mgetline(str1, SIZE);
@@ -27,6 +30,11 @@ int main()
 
     // strindex test
     printf("String: %s\tOther: %s\tStrindex: %d\n", "quaqquew", "uew", strindex("quaqquew", "uew"));
+
+    // getop test
+    while ((op = getop(str1)) != EOF){
+        printf("Operator: %c\tString: %s\n", (op == NUMBER) ? 'N' : op, str1);
+    }
 
     return 0;
 }
@@ -129,6 +137,40 @@ int strindex(char *s, char *t)
     return -1;
 }
 
-/*
-    getop
-*/
+/* getop:   get next operator or numeric operand */
+int getop(char *s)
+{
+    int c, n;
+
+    while (isspace(c = getch())) // remove heading spaces
+        ;
+
+    if (c == '+' || c == '-'){ // check if + and - are operator or part of a number
+        if (!isdigit(n = getch()) && n != '.')
+            return c;
+        else
+            ungetch(n);
+    } else {
+        if (!isdigit(c) && c != '.')
+            return c;
+        else
+            ungetch(c);
+    }
+
+    if (c == '+' || c == '-')
+        *s++ = c;
+
+    while (isdigit(*s++ = getch())) // get integer part
+        ;
+    s -= 1;
+
+    if (*s++ == '.'){
+        while (isdigit(*s++ = getch())) // get fractional part
+            ;
+        s -= 1;
+    }
+
+    *s = '\0';
+    
+    return NUMBER;
+}
