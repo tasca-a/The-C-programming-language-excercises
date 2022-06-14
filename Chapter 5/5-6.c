@@ -97,7 +97,6 @@ void reverse(char *s)
 }
 
 /* strindex:    return index of t in s, -1 if none */
-/* NOT WORKING YET */
 int strindex(char *s, char *t)
 {
     int ls, lt;
@@ -109,27 +108,27 @@ int strindex(char *s, char *t)
     for (lt = 0; *t++ != '\0'; lt++)
         ;
 
-    printf("%d\t%d\n", ls, lt);
-
     // restore pointers
     s -= ls + 1;
     t -= lt + 1;
-
-    for (i = 0; i < (ls - lt); i++){
-        for (l = 0; *s == *t; l++){
+    
+    for (i = 0; i <= (ls - lt); i++, s++){
+        for (l = 0; *s == *t && *t != '\0'; l++){
             t++;
+            s++;
         }
 
         if (*t == '\0')
             return i;
-        else
+        else{
             t -= l;
+            s -= l;
+        }
     }
 
     return -1;
 }
 
 /*
-    strindex
     getop
 */
