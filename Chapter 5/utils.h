@@ -6,4 +6,7 @@
 int getch(void);
 void ungetch(int c);
 
+void push(double f);
+double pop(void);
+
 #endif
