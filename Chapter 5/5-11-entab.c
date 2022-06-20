@@ -1,12 +1,8 @@
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 /* entab:
-replaces strings of blanks by the minimum number of tabs and blanks to achieve the same spacing.
-
-When either a tab or a single blank would suffice to reach a tab stop, which should be given preference?
-The tab, because with a single character it cover one or more spaces instead of the single black which covers only one space. */
+replaces strings of blanks by the minimum number of tabs and blanks to achieve the same spacing. */
 
 #define TAB_COLUMN 8
 #define MAX_TAB_STOPS 40
@@ -19,12 +15,14 @@ int main(int argc, char **argv)
 {
     int tabn = process_arguments(argc, argv);
 
+    /* DEBUG
     printf("tabn: %d\n", tabn);
 
     for (int i = 0; i < argc - 1; i++)
         printf("arg %d: %d\n", i+1, tab_stop_list[i]);
 
     printf("%s\n", (tabn == -1) ? "FAIL" : "OK");
+    */
 
     int c;
     int col = 0;
@@ -64,12 +62,6 @@ int main(int argc, char **argv)
                 tabs += col / TAB_COLUMN;
                 spaces = (col < TAB_COLUMN) ? col : col % TAB_COLUMN;     
             }
-/*
-            int tabs = col / TAB_COLUMN;
-            int spaces = col % TAB_COLUMN;
-*/
-
-            printf("tabs: %d\t spaces: %d\n", tabs, spaces);
 
             for (int i = 0; i < tabs; i++)
                 putchar('\t');
