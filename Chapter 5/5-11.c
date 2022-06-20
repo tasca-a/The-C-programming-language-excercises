@@ -19,6 +19,8 @@ int main(int argc, char **argv)
 {
     int tabn = process_arguments(argc, argv);
 
+    printf("tabn: %d\n", tabn);
+
     for (int i = 0; i < argc - 1; i++)
         printf("arg %d: %d\n", i+1, tab_stop_list[i]);
 
@@ -52,14 +54,15 @@ int main(int argc, char **argv)
                 tabs = col / TAB_COLUMN;
                 spaces = col % TAB_COLUMN;
             } else {
-                int colt = col;
+                int colcount;
 
-                for (tabs = 0; tabs < tabn && (colt - tab_stop_list[tabs]) > 0; tabs++)
-                    colt -= tab_stop_list[tabs];
+                for (tabs = 0, colcount = 0; col > (tab_stop_list[tabs] - colcount) && tabs < tabn; tabs++){
+                    col -= tab_stop_list[tabs] - colcount;
+                    colcount = tab_stop_list[tabs];
+                }
 
-                // NOT WORKING
-                tabs += colt / TAB_COLUMN;
-                spaces = colt;                
+                tabs += col / TAB_COLUMN;
+                spaces = (col < TAB_COLUMN) ? col : col % TAB_COLUMN;     
             }
 /*
             int tabs = col / TAB_COLUMN;
@@ -85,7 +88,7 @@ int main(int argc, char **argv)
 
 /* process_arguments:   process the passed arguments to create the tab stop list.
                         return the number of elements in the tab stop list, -1 if the arguments are not
-                        provided correctly. */
+                        provided correctly or not provided at all. */
 int process_arguments(int argc, char **argv)
 {
     int i = 0;
@@ -101,5 +104,5 @@ int process_arguments(int argc, char **argv)
         if (tab_stop_list[j] > tab_stop_list[j+1])
             return -1;
 
-    return i;
+    return (i == 0) ? -1 : i;
 }
