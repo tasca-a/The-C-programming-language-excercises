@@ -100,8 +100,8 @@ int process_arguments(int argc, char **argv)
     while (argc-- > 1 && i < MAX_TAB_STOPS){
         if (++argv != NULL){
             switch (*argv[0]) {
-                case '-': m = atoi(&(*argv)[1]); break; // &(*argv)[1] = argv[0][1], but the latter is less clear in this context (for me)
-                case '+': n = atoi(&(*argv)[1]); break;
+                case '-': m = atoi(*argv+1); break; // &(*argv)[1] = argv[0][1], but the latter is less clear in this context (for me)
+                case '+': n = atoi(*argv+1); break;
                 default: tab_stop_list[i++] = atoi(*argv); break;
             }
         }
