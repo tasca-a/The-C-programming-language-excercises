@@ -16,14 +16,16 @@ void mqsort(void *lineptr[], int left, int right, int (*comp)(void *, void *));
 int numcmp(char *, char *);
 
 void mreverse(char **lineptr, int end);
+void strlwr(char *save, char *toprocess);
+
+int numeric = 0;    /* 1 if numeric sort */
+int reverse = 0;    /* 1 if reverse sort */
+int fold = 0;       /* 1 if fold upper and lower case */
 
 /* sort input lines */
 int main(int argc, char *argv[])
 {
     int nlines;         /* number of input lines read */
-    int numeric = 0;    /* 1 if numeric sort */
-    int reverse = 0;    /* 1 if reverse sort */
-    int fold = 0;       /* 1 if fold upper and lower case */
 
     int c;
     while (--argc > 0 && (*(++argv)[0] == '-')){
@@ -37,11 +39,11 @@ int main(int argc, char *argv[])
     }
 
     if ((nlines = readlines(lineptr, MAXLINES)) >= 0){
-        
+        /*
         if (fold)
             for (int i = 0; i < nlines; i++)
                 for (int j = 0; lineptr[i][j] != '\0'; j++)
-                    lineptr[i][j] = tolower(lineptr[i][j]);
+                    lineptr[i][j] = tolower(lineptr[i][j]); */
 
         mqsort((void **) lineptr, 0, nlines-1, (int (*)(void *, void *)) (numeric ? numcmp : strcmp));
 
@@ -89,6 +91,8 @@ int numcmp(char *s1, char *s2)
 void mqsort(void *v[], int left, int right, int (*comp)(void *, void *))
 {
     int i, last;
+    char tmp1[MAXLEN];
+    char tmp2[MAXLEN];
     void swap(void *v[], int, int);
 
     if (left >= right)  /* do nothing if array contains */
@@ -97,13 +101,27 @@ void mqsort(void *v[], int left, int right, int (*comp)(void *, void *))
     swap(v, left, (left + right)/2);
     last = left;
 
-    for (i = left+1; i <= right; i++)
-        if ((*comp)(v[i], v[left]) < 0)
-            swap(v, ++last, i);
+    for (i = left+1; i <= right; i++){
+        if (fold){
+            strlwr(tmp1, v[i]);
+            strlwr(tmp2, v[left]);
+        }
+        if ((*comp)(tmp1, tmp2) < 0)
+            swap(v, ++last, i); 
+    }
     
     swap(v, left, last);
     mqsort(v, left, last-1, comp);
     mqsort(v, last+1, right, comp);
+}
+
+/* strlwr:  convert string to lowecase and save it in save */
+void strlwr(char *save, char *toprocess)
+{
+    int i = 0;
+
+    while ((save[i] = tolower(toprocess[i])) != '\0')
+        i++;
 }
 
 /* readlines:   read input lines */
