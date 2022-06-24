@@ -105,6 +105,9 @@ void mqsort(void *v[], int left, int right, int (*comp)(void *, void *))
         if (fold){
             strlwr(tmp1, v[i]);
             strlwr(tmp2, v[left]);
+        } else {
+            strcpy(tmp1, v[i]);
+            strcpy(tmp2, v[left]);
         }
         if ((*comp)(tmp1, tmp2) < 0)
             swap(v, ++last, i); 
