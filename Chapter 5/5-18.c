@@ -23,7 +23,7 @@ char name[MAXTOKEN];        /* identifier name */
 char datatype[MAXTOKEN];    /* data type = char, int, ecc. */
 char out[1000];             /* output string */
 
-/* convert declarations to words */
+/* dcl: convert declarations to words */
 int main()
 {
     while (gettoken() != EOF){
