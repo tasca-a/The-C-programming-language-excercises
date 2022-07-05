@@ -22,7 +22,7 @@ int main()
 /* getword: get next word or character from input */
 int getword(char *word, int lim)
 {
-    int c, getch(void);
+    int c, tmp, getch(void);
     void ungetch(int);
     char *w = word;
 
@@ -30,11 +30,27 @@ int getword(char *word, int lim)
         ;
     
     if (c != EOF){
-        switch (c) {
-            case '"': ungetch(c); c = skipbetween('"', '"'); break;         // skip all strings
-            case '\'': ungetch(c); c = skipbetween('\'', '\''); break;      // skip all chars
-            case '/': c = skipbetween('/', '\n'); break;                    // skip all inline comments
-            case '#': ungetch(c); c = skipbetween('#', '\n'); break;        // skip all preprocessor directives
+        while (c == '"' || c == '\'' || c == '/' || c == '#'){
+            switch (c) {
+                case '"': ungetch(c); c = skipbetween('"', '"'); break;         // skip all strings
+                case '\'': ungetch(c); c = skipbetween('\'', '\''); break;      // skip all chars
+                case '/':
+                    tmp = getch();
+                    if (tmp == '/'){
+                        ungetch(tmp);
+                        c = skipbetween('/', '\n');                             // skip all inline comments
+                    } else if (tmp == '*'){
+                        ungetch(tmp);
+
+                        while ((c = skipbetween('*', '*')) != '/')              // skip all multiline comments
+                            ;
+
+                        while (isspace(c = getch()))    // remove all spaces afterwards 
+                            ;
+                    }
+                    break;                    
+                case '#': ungetch(c); c = skipbetween('#', '\n'); break;        // skip all preprocessor directives
+            }
         }
         *w++ = c;
     }
