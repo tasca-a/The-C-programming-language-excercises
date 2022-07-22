@@ -35,7 +35,6 @@ int main()
 
     // Sort the array in decreasing order of occurrencies
     qsort(treearray, n_tree_elements, sizeof(struct tnode *), node_compare);
-    //node_compare(treearray[0], treearray[1]);
 
     // Print the sorted array in reverse order
     for (int i = 0; i < n_tree_elements; i++)
