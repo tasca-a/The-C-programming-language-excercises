@@ -16,7 +16,7 @@ int getword(char *word, int lim);
 struct tnode *addtree(struct tnode *t, char *w);
 int get_n_of_elements(struct tnode *t);
 void build_tree_array(struct tnode *array[], struct tnode *tree);
-int node_compare(struct tnode *a, struct tnode *b);
+int node_compare(const void *a, const void *b);
 
 int main()
 {
@@ -34,10 +34,11 @@ int main()
     build_tree_array(treearray, tree);
 
     // Sort the array in decreasing order of occurrencies
-    qsort(treearray, n_tree_elements, sizeof(struct tnode *), (int (*)(const void *, const void *)) node_compare);
+    qsort(treearray, n_tree_elements, sizeof(struct tnode *), node_compare);
+    //node_compare(treearray[0], treearray[1]);
 
     // Print the sorted array in reverse order
-    for (int i = n_tree_elements-1; i >= 0; i--)
+    for (int i = 0; i < n_tree_elements; i++)
         printf("Occurrences: %d\tword: %s\n", treearray[i]->count, treearray[i]->word);
 
     return 0;
@@ -113,12 +114,15 @@ void build_tree_array(struct tnode *array[], struct tnode *tree)
 }
 
 /* node_compare: return 1 if a > b, 0 if a = b and -1 if a < b */
-int node_compare(struct tnode *a, struct tnode *b)
+int node_compare(const void *a, const void *b)
 {
-    if (a->count > b->count)
-        return 1;
-    else if (a->count < b->count)
+    const struct tnode *nodeA = *(const struct tnode **) a;     // I still don't understand how this works..
+    const struct tnode *nodeB = *(const struct tnode **) b;
+
+    if (nodeA->count > nodeB->count)
         return -1;
+    else if (nodeA->count < nodeB->count)
+        return 1;
     else
         return 0;
 }
