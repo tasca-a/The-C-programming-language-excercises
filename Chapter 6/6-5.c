@@ -102,6 +102,5 @@ int main()
     printf("...searching for %s: %s\n", "Giorgia", (lookup("Giorgia") != NULL) ? FOUND : NOTFOUND);
     printf("...searching for %s: %s\n", "Alberto", (lookup("Alberto") != NULL) ? FOUND : NOTFOUND);
 
-
     return 0;
 }
