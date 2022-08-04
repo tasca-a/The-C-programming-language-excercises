@@ -36,6 +36,7 @@ int main()
 {
     int signal;
     int name_flag, defn_flag;
+    int is_valid_word;
     struct nlist * tmp;
 
     char name[WORD_LEN];
@@ -44,17 +45,19 @@ int main()
 
     while ((signal = getword()) != EOF){
 
-        if ((tmp = lookup(word)) == NULL)
-            printf("%s ", word);
-        else
-            printf("%s ", tmp->defn);
+        is_valid_word = signal != ' ' && signal != '\n' && signal != '\t';
 
-        if (defn_flag == TRUE){
+        if ((tmp = lookup(word)) == NULL)
+            printf("%s", word);
+        else
+            printf("%s", tmp->defn);
+
+        if (defn_flag == TRUE && is_valid_word){
             install(name, word);
             defn_flag = FALSE;
         }
 
-        if (name_flag == TRUE){
+        if (name_flag == TRUE && is_valid_word){
             strcpy(name, word);
             name_flag = FALSE;
             defn_flag = TRUE;
@@ -118,15 +121,30 @@ struct nlist *install(char *name, char *defn)
     return np;
 }
 
-/* getword: get every single word of the input */
+/* getword: get every single word of the input.
+            Spaces and new lines are considered words */
 int getword()
 {   
     int c;
     char * word_ptr = word;
     while ((c = getchar()) != EOF){
-        if (c == '\n' || c == ' ')
-            return word[0];
-        
+        if (c == '\n' || c == ' ' || c == ';' || c == ')'  || c == ']' || c == '}')
+            if (word_ptr == word){
+                *word_ptr++ = c;
+                *word_ptr = '\0';
+                return c;
+            }
+            else{
+                ungetc(c, stdin);
+                return word[0];
+            }
+
+        if (c == '#' || c == '('  || c == '[' || c == '{'){
+            *word_ptr++ = c;
+            *word_ptr = '\0';
+            return c;
+        }
+
         *word_ptr++ = c;
         *word_ptr = '\0';
     }
