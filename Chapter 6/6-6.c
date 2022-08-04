@@ -1,16 +1,3 @@
-/*
-    Implement DEFINE!
-
-    We can leverage all the function created in ex. 6-5:
-
-        - get a word (while there are words)
-        - check if that word is "DEFINE"
-            - if it is, flag that the next word will be installed in the hashtable
-        - check if the word is present in the hashtable
-            - if it is, set the word to copy to the output to the defn
-        - output the word that needs to be outputted.
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -36,14 +23,18 @@ int main()
 {
     int signal;
     int name_flag, defn_flag;
-    int is_valid_word;
+    int is_valid_word, is_in_quotes;
     struct nlist * tmp;
 
     char name[WORD_LEN];
 
     name_flag = FALSE;
+    is_in_quotes = FALSE;
 
     while ((signal = getword()) != EOF){
+
+        if (signal == '\"')
+            is_in_quotes = (is_in_quotes == TRUE) ? FALSE : TRUE;
 
         is_valid_word = signal != ' ' && signal != '\n' && signal != '\t';
 
@@ -52,19 +43,19 @@ int main()
         else
             printf("%s", tmp->defn);
 
-        if (defn_flag == TRUE && is_valid_word){
+        if (defn_flag == TRUE && is_valid_word && !is_in_quotes){
             install(name, word);
             defn_flag = FALSE;
         }
 
-        if (name_flag == TRUE && is_valid_word){
+        if (name_flag == TRUE && is_valid_word && !is_in_quotes){
             strcpy(name, word);
             name_flag = FALSE;
             defn_flag = TRUE;
         }
 
 
-        if (strcmp(word, "DEFINE") == 0)
+        if (strcmp(word, "DEFINE") == 0 && !is_in_quotes)
             name_flag = TRUE;
 
     }
@@ -128,7 +119,7 @@ int getword()
     int c;
     char * word_ptr = word;
     while ((c = getchar()) != EOF){
-        if (c == '\n' || c == ' ' || c == ';' || c == ')'  || c == ']' || c == '}')
+        if (c == '\n' || c == ' ' || c == ';' || c == ')'  || c == ']' || c == '}' || c == '\"')
             if (word_ptr == word){
                 *word_ptr++ = c;
                 *word_ptr = '\0';
