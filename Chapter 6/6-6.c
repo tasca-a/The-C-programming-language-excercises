@@ -119,7 +119,7 @@ int getword()
     int c;
     char * word_ptr = word;
     while ((c = getchar()) != EOF){
-        if (c == '\n' || c == ' ' || c == ';' || c == ')'  || c == ']' || c == '}' || c == '\"')
+        if (c == '\n' || c == ' ' || c == ';' || c == ',' || c == ')'  || c == ']' || c == '}' || c == '\"'){
             if (word_ptr == word){
                 *word_ptr++ = c;
                 *word_ptr = '\0';
@@ -129,6 +129,7 @@ int getword()
                 ungetc(c, stdin);
                 return word[0];
             }
+        }
 
         if (c == '#' || c == '('  || c == '[' || c == '{'){
             *word_ptr++ = c;
