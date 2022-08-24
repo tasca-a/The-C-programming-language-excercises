@@ -55,7 +55,9 @@ int main()
         }
 
 
-        if (strcmp(word, "DEFINE") == 0 && !is_in_quotes)
+        if (
+            (strcmp(word, "DEFINE") == 0 || strcmp(word, "define") == 0) && 
+            !is_in_quotes)
             name_flag = TRUE;
 
     }
